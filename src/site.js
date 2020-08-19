@@ -17,6 +17,16 @@ function changeLength() {
   update();
 }
 
+function changeBg() {
+  bgColour = bgColourInput.value
+  update();
+}
+
+function changeFg() {
+  fgColour = fgColourInput.value
+  update();
+}
+
 function toDegrees(rad) {
   return rad * (180/Math.PI);
 }
@@ -48,9 +58,9 @@ function draw(x, y, addAngle, length, count) {
 
 function update() {
   ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle=primaryColour;
+  ctx.fillStyle=bgColour;
   ctx.fillRect(0, 0, width, height);
-  ctx.strokeStyle = secondaryColour;
+  ctx.strokeStyle = fgColour;
   ctx.lineWidth = lineWidth;
   ctx.beginPath();
   ctx.moveTo(width/2,start);
@@ -70,21 +80,24 @@ const defaultLineLengthStart = maxLineLengthStart;
 const defaultStart = 1300;
 const defaultAngle = toRadians(20);
 const defaultAmount = 13;
-const defaultPrimaryColour = "#5F9EA0";
-const defaultSecondaryColour = "#c16081";
+const defaultBgColour = "#5F9EA0";
+const defaultFgColour = "#c16081";
 const defaultLineWidth = 2;
 
 // Canvas dimensions
 const width = 3000;
 const height = width * 0.5;
 
+const sliderSubclasses = Array("-webkit-slider-runnable-track", "-moz-range-track", "-ms-fill-lower",  "-ms-fill-upper");
+const thumbSubclasses = Array("-webkit-slider-thumb", "-moz-range-thumb")
+
 // Global variables
 var angle = defaultAngle;
 var amount = defaultAmount;
 var linelengthStart = defaultLineLengthStart;
 var start = defaultStart;
-var primaryColour = defaultPrimaryColour;
-var secondaryColour = defaultSecondaryColour;
+var bgColour = defaultBgColour;
+var fgColour = defaultFgColour;
 var lineWidth = defaultLineWidth;
 
 // Get input elements and set default values
@@ -99,6 +112,16 @@ depthInput.value = defaultAmount;
 const lengthInput = document.getElementById("length");
 lengthInput.addEventListener("input", changeLength);
 lengthInput.value = defaultLineLengthStart;
+
+const bgColourInput = document.getElementById("bg-colour")
+bgColourInput.addEventListener("change", changeBg);
+bgColourInput.value = defaultBgColour;
+
+const fgColourInput = document.getElementById("fg-colour")
+fgColourInput.addEventListener("change", changeFg);
+fgColourInput.value = defaultFgColour;
+
+const sliders = Array(angleInput, lengthInput);
 
 const canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");

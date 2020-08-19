@@ -1,0 +1,27 @@
+%colour-input {
+    display: flex;
+    margin-bottom: 1.5rem;
+}
+
+input[type=color] {
+    margin-left: 0.5rem;
+    -webkit-appearance: none;
+    outline: none;
+    border: none;
+    padding: 0;
+    width: 1.5rem;
+    &::--webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+    &::--webkit-color-swatch{
+        border: none;
+    }
+}
+
+#bg-colour-input {
+    @extend %colour-input
+}
+
+#fg-colour-input {
+    @extend %colour-input
+}

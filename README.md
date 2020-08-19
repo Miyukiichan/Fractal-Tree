@@ -7,11 +7,17 @@ Fractal tree demo in HTML5 and JS
 ## Must
 
 - Colour picking
+  - Apply colours to settings elements
+- Style number inputs
+- Make styles cross browser compatible
+
+## Should
+
 - Rotation
 - Rate of angle change
 - Rate of length change 
 
-## Should
+# Could
 
 - Multiple trees
 - Animation
