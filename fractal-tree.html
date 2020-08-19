@@ -1,13 +1,14 @@
 <html>
   <head>
     <link rel="stylesheet" href="style/style.css"/>
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
   </head>
   <body>
+    <header>Fractal Tree</header>
+    <div id="parent">
     <div id="settings">
       <center>
-        <h1>Settings</h1>
+        <h1><u>Settings</u></h1>
       </center>
       <form id="controls">
         <div class="input" id="angle-input">
@@ -20,14 +21,12 @@
         </div>
         <div class="input" id="length-input">
           <label for="length">Size</label>
-          <input class="range" id="length" type="range" min="20" max="150" value="150"></input>
+          <input class="range" id="length" type="range" min="20" max="300" value="300"></input>
         </div>
       </form>
     </div>
-    <center>
-      <header>Fractal Tree</header>
-      <canvas id="canvas">No canvas support</canvas>
-    </center>
+    <canvas id="canvas">No canvas support</canvas>
+    </div>
   </body>
   <script src="src/site.js"></script>
 </html>

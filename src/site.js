@@ -51,6 +51,7 @@ function update() {
   ctx.fillStyle=primaryColour;
   ctx.fillRect(0, 0, width, height);
   ctx.strokeStyle = secondaryColour;
+  ctx.lineWidth = lineWidth;
   ctx.beginPath();
   ctx.moveTo(width/2,start);
   ctx.lineTo(width/2, start - linelengthStart);
@@ -58,27 +59,33 @@ function update() {
   draw(width/2, start - linelengthStart, 0, linelengthStart, 1);
 }
 
-// Default values
-const defaultLineLengthStart = 150;
-const defaultStart = 700;
-const defaultAngle = toRadians(20);
-const defaultAmount = 13;
-const primaryColour = "#5F9EA0";
-const secondaryColour = "#c16081";
-
 // Value boundaries
 const maxDepth = 13;
-const maxLineLengthStart = 150;
+const maxLineLengthStart = 300;
+const minLineWidth = 1;
+const maxLineWidth = 10;
 
-// Starting position
-const height = 800;
-const width = 1000;
+// Default values
+const defaultLineLengthStart = maxLineLengthStart;
+const defaultStart = 1300;
+const defaultAngle = toRadians(20);
+const defaultAmount = 13;
+const defaultPrimaryColour = "#5F9EA0";
+const defaultSecondaryColour = "#c16081";
+const defaultLineWidth = 2;
+
+// Canvas dimensions
+const width = 3000;
+const height = width * 0.5;
 
 // Global variables
 var angle = defaultAngle;
 var amount = defaultAmount;
 var linelengthStart = defaultLineLengthStart;
 var start = defaultStart;
+var primaryColour = defaultPrimaryColour;
+var secondaryColour = defaultSecondaryColour;
+var lineWidth = defaultLineWidth;
 
 // Get input elements and set default values
 const angleInput = document.getElementById("angle");
@@ -96,9 +103,8 @@ lengthInput.value = defaultLineLengthStart;
 const canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 canvas.height = height;
-canvas.width = 1000;
+canvas.width = width;
 ctx.heoght = height;
-ctx.width = 1000;
-
+ctx.width = width;
 
 update();

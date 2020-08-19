@@ -1,119 +1,26 @@
 @import "colours";
+@import "slider";
+@import "settings";
+@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
 
 body {
-  display: flex;
+  font-family: 'Poiret One', cursive;
 }
 
 canvas {
   border: solid black 1px;
-  margin-top: 0.5rem;
-  width: 100%;
+  width: 85%;
+  height: 100%;
 }
 
 header {
-  font-size: 36pt;
-  margin: 0.5rem;
+  font-size: 42pt;
+  margin: 1.1rem;
+  display: flex;
+  justify-content: center;
 }
 
-label {
-  margin-right: 1rem;
-}
-
-.range {
-  margin-bottom: -0.5rem;
-}
-
-.input {
-  margin-bottom: 2rem;
-}
-
-#settings {
-  margin-right: 4rem;
-  margin-left: 3rem;
-  margin-top: 5rem;
-  border: solid black 2px;
-  padding: 2rem;
-  padding-top: 1rem;
-}
-
-$thumb-diameter: 26px;
-$track-height: 11px;
-$thumb-radius: 15px;
-
-%slider-track {
-    width: 100%;
-    height: $track-height;
-    cursor: pointer;
-    animate: 0.2s;
-    background: $primary;
-    border-radius: 1px;
-}
-
-%slider-thumb {
-    border: none;
-    height: $thumb-diameter;
-    width: $thumb-diameter;
-    border-radius: $thumb-radius;
-    background: $secondary;
-    cursor: pointer;
-}
-
-%ms-fill {
-    background: $primary;
-    border-radius: 2px;
-}
-
-input[type=range] {
-  height: 34px;
-  -webkit-appearance: none;
-  margin: 10px 0;
-  width: 100%;
-
-  &::-webkit-slider-runnable-track {
-    @extend %slider-track;
-  }
-  &::-webkit-slider-thumb {
-    @extend %slider-thumb;
-    -webkit-appearance: none;
-    margin-top: -8px;
-  }
-  &:focus::-webkit-slider-runnable-track {
-    background: $primary;
-  }
-  &::-moz-range-track {
-    @extend %slider-track;
-  }
-  &::-moz-range-thumb {
-    @extend %slider-thumb;
-  }
-  &::-ms-track {
-    width: 100%;
-    height: $track-height;
-    cursor: pointer;
-    animate: 0.2s;
-    background: transparent;
-    border-color: transparent;
-    color: transparent;
-  }
-  &::-ms-fill-lower {
-    @extend %ms-fill;
-  }
-  &::-ms-fill-upper {
-    @extend %ms-fill;
-  }
-  &::-ms-thumb {
-    margin-top: 1px;
-    border: none;
-    height: $thumb-diameter;
-    width: $thumb-diameter;
-    border-radius: $thumb-radius;
-    background: $secondary;
-    cursor: pointer;
-  }
-  &:focus::-ms-fill-lower {
-    background: $primary;
-  }
-  &:focus::-ms-fill-upper {
-    background: $primary;
-  }
+#parent {
+  display: flex;
+  margin-top: 1rem;
 }
