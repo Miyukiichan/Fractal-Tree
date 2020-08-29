@@ -6,8 +6,6 @@ Fractal tree demo in HTML5 and JS
 
 ## Must
 
-- Colour picking
-  - Apply colours to settings elements
 - Style number inputs
 - Make styles cross browser compatible
 
