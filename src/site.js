@@ -33,7 +33,7 @@ function changeRotation() {
 }
 
 function changeLengthChange() {
-  lengthChange = lengthChangeInput.value / 100;
+  lengthChange = lengthChangeInput.value / lengthChangeInputModifier;
   update();
 }
 
@@ -111,9 +111,7 @@ const defaultLengthChange = 0.67;
 // Canvas dimensions
 const width = 3000;
 const height = width * 0.5;
-
-const sliderSubclasses = Array("-webkit-slider-runnable-track", "-moz-range-track", "-ms-fill-lower",  "-ms-fill-upper");
-const thumbSubclasses = Array("-webkit-slider-thumb", "-moz-range-thumb")
+const lengthChangeInputModifier = 100;
 
 // Global variables
 var angle = defaultAngle;
@@ -153,7 +151,7 @@ rotationInput.value = toDegrees(defaultRotation);
 
 const lengthChangeInput = document.getElementById("length-change");
 lengthChangeInput.addEventListener("input", changeLengthChange);
-lengthChangeInput.value = defaultLengthChange * 100;
+lengthChangeInput.value = defaultLengthChange * lengthChangeInputModifier;
 
 const sliders = Array(angleInput, lengthInput);
 
