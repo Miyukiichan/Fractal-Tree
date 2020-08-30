@@ -32,6 +32,11 @@ function changeRotation() {
   update();
 }
 
+function changeLengthChange() {
+  lengthChange = lengthChangeInput.value / 100;
+  update();
+}
+
 function toDegrees(rad) {
   return rad * (180/Math.PI);
 }
@@ -47,7 +52,7 @@ function branch(x, y, a, l, count) {
   const destY = y - (Math.cos(a) * l);
   ctx.lineTo(destX, destY);
   ctx.stroke();
-  draw(destX, destY, a, l * 0.67, count + 1)
+  draw(destX, destY, a, l * lengthChange, count + 1)
 }
 
 function draw(x, y, addAngle, length, count) {
@@ -70,26 +75,27 @@ function update() {
   // Draw first line
   ctx.strokeStyle = fgColour;
   ctx.lineWidth = lineWidth;
-  ctx.beginPath();
   var x = width/2;
   var y = start;
+  ctx.beginPath();
   ctx.moveTo(x, y);
   x = x - (Math.sin(rotation) * linelengthStart);
   y = y - (Math.cos(rotation) * linelengthStart);
   ctx.lineTo(x, y);
-  //ctx.lineTo(width/2, start - linelengthStart);
   ctx.stroke();
   // Recursively draw the rest of the lines
-  draw(x, y, rotation, linelengthStart, 1);
+  draw(x, y, rotation, linelengthStart * lengthChange, 1);
 }
 
 // Value boundaries
 const maxDepth = 13;
-const maxLineLengthStart = 300;
+const maxLineLengthStart = 400;
 const minLineWidth = 1;
 const maxLineWidth = 10;
 const minRotation = 0;
 const maxRotation = 360;
+const maxLengthChange = 1;
+const minLengthChange = 0.1;
 
 // Default values
 const defaultLineLengthStart = maxLineLengthStart;
@@ -100,6 +106,7 @@ const defaultBgColour = "#5F9EA0";
 const defaultFgColour = "#c16081";
 const defaultLineWidth = 2;
 const defaultRotation = minRotation;
+const defaultLengthChange = 0.67;
 
 // Canvas dimensions
 const width = 3000;
@@ -117,6 +124,7 @@ var bgColour = defaultBgColour;
 var fgColour = defaultFgColour;
 var lineWidth = defaultLineWidth;
 var rotation = defaultRotation;
+var lengthChange = defaultLengthChange;
 
 // Get input elements and set default values
 const angleInput = document.getElementById("angle");
@@ -142,6 +150,10 @@ fgColourInput.value = defaultFgColour;
 const rotationInput = document.getElementById("rotation");
 rotationInput.addEventListener("input", changeRotation);
 rotationInput.value = toDegrees(defaultRotation);
+
+const lengthChangeInput = document.getElementById("length-change");
+lengthChangeInput.addEventListener("input", changeLengthChange);
+lengthChangeInput.value = defaultLengthChange * 100;
 
 const sliders = Array(angleInput, lengthInput);
 
