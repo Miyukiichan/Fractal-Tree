@@ -6,15 +6,17 @@ Fractal tree demo in HTML5 and JS
 
 ## Must
 
-- Style number inputs
-- Make styles cross browser compatible
-
-## Should
-
+- Change line thickness
 - Rotation
   - About the center point instead of the origin
 - Rate of angle change
 - Move tree by dragging
+- Make responsive
+
+## Should
+
+- Style number inputs
+- Make styles cross browser compatible
 
 # Could
 
