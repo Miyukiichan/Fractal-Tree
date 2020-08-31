@@ -53,6 +53,7 @@ canvas {
   border: solid black 1px;
   width: 85%;
   height: 100%;
+  margin-right: 1rem;
 }
 
 header {
