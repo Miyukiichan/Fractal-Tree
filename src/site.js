@@ -6,7 +6,13 @@ function changeAngle() {
 }
 
 function changeDepth() {
-  depth = Number(depthInput.value);
+  var d = Number(depthInput.value);
+  if (d > maxDepth)
+    d = maxDepth
+  else if (d < minDepth)
+    d = minDepth;
+  depth = d;
+  depthInput.value = d;
   update();
 }
 
