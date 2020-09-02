@@ -26,7 +26,7 @@ function changeFg() {
 }
 
 function changeRotation() {
-  rotation = toRadians(rotationInput.value) * -1 //Make rotation go clockwise
+  rotation = toRadians(Number(rotationInput.value)) * -1 //Make rotation go clockwise
   update();
 }
 
@@ -37,6 +37,11 @@ function changeLengthChange() {
 
 function changeLineWidth() {
   lineWidth = setNumberInput(lineWidthInput, minLineWidth, maxLineWidth);
+  update();
+}
+
+function changeAngleChange() {
+  angleChange = angleChangeInput.value;
   update();
 }
 
@@ -89,11 +94,13 @@ function branch(x, y, a, l, count) {
 function draw(x, y, addAngle, l, count) {
   if (count >= depth)
     return;
+  //Additional rotation based on rate of change and how many iterations there have been
+  const modifier = count * angleChange / 100;
   //Left
-  var trueAngle = angle + addAngle
+  var trueAngle = (addAngle + angle) + modifier;
   branch(x, y, trueAngle, l, count);
   //Right
-  trueAngle = addAngle - angle
+  trueAngle = (addAngle - angle) - modifier;
   branch(x, y, trueAngle, l, count);
 }
 
@@ -125,6 +132,8 @@ const minRotation = 0;
 const maxRotation = 360;
 const maxLengthChange = 100;
 const minLengthChange = 0;
+const minAngleChange = 0;
+const maxAngleChange = 630;
 
 
 /*Default values*/
@@ -135,6 +144,7 @@ const defaultLength = maxLength;
 const defaultLineWidth = 2;
 const defaultRotation = minRotation;
 const defaultLengthChange = 67;
+const defaultAngleChange = minAngleChange;
 
 const defaultStart = 1300;
 const defaultBgColour = "#5F9EA0";
@@ -157,8 +167,9 @@ var start = defaultStart;
 var bgColour = defaultBgColour;
 var fgColour = defaultFgColour;
 var lineWidth = defaultLineWidth;
-var rotation = defaultRotation;
+var rotation = toRadians(defaultRotation);
 var lengthChange = defaultLengthChange;
+var angleChange = defaultAngleChange;
 
 
 /*Get input elements and set default values*/
@@ -171,6 +182,7 @@ const fgColourInput = setupInput("fg-colour", changeFg, defaultFgColour);
 const rotationInput = setupInput("rotation", changeRotation, defaultRotation, minRotation, maxRotation);
 const lengthChangeInput = setupInput("length-change", changeLengthChange, defaultLengthChange, minLengthChange, maxLengthChange);
 const lineWidthInput = setupInput("line-width", changeLineWidth, defaultLineWidth, minLineWidth, maxLineWidth);
+const angleChangeInput = setupInput("angle-change", changeAngleChange, defaultAngleChange, minAngleChange, maxAngleChange);
 
 
 /*Initialize canvas and draw the tree*/

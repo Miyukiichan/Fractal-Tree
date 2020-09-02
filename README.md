@@ -8,7 +8,6 @@ Fractal tree demo in HTML5 and JS
 
 - Rotation
   - About the center point instead of the origin
-- Rate of angle change
 - Move tree by dragging
 - Make responsive
 
