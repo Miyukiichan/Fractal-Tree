@@ -6,7 +6,6 @@ Fractal tree demo in HTML5 and JS
 
 ## Must
 
-- Change line thickness
 - Rotation
   - About the center point instead of the origin
 - Rate of angle change

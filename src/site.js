@@ -6,13 +6,7 @@ function changeAngle() {
 }
 
 function changeDepth() {
-  var d = Number(depthInput.value);
-  if (d > maxDepth)
-    d = maxDepth
-  else if (d < minDepth)
-    d = minDepth;
-  depth = d;
-  depthInput.value = d;
+  depth = setNumberInput(depthInput, minDepth, maxDepth);
   update();
 }
 
@@ -41,8 +35,25 @@ function changeLengthChange() {
   update();
 }
 
+function changeLineWidth() {
+  lineWidth = setNumberInput(lineWidthInput, minLineWidth, maxLineWidth);
+  update();
+}
+
 
 /*Functions*/
+
+// Limit the input of a number input using the min and max values
+// Returns the value set accordingly
+function setNumberInput(input, min, max) {
+  var value = Number(input.value);
+  if (value > max)
+    value = max
+  else if (value < min)
+    value = min;
+  input.value = value;
+  return value;
+}
 
 function toDegrees(rad) {
   return rad * (180/Math.PI);
@@ -155,10 +166,11 @@ var lengthChange = defaultLengthChange;
 const angleInput = setupInput("angle", changeAngle, defaultAngle, minAngle, maxAngle);
 const depthInput = setupInput("depth", changeDepth, defaultDepth, minDepth, maxDepth)
 const lengthInput = setupInput("length", changeLength, defaultLength, minLength, maxLength);
-const rotationInput = setupInput("rotation", changeRotation, defaultRotation, minRotation, maxRotation);
-const lengthChangeInput = setupInput("length-change", changeLengthChange, defaultLengthChange, minLengthChange, maxLengthChange);
 const bgColourInput = setupInput("bg-colour", changeBg, defaultBgColour);
 const fgColourInput = setupInput("fg-colour", changeFg, defaultFgColour);
+const rotationInput = setupInput("rotation", changeRotation, defaultRotation, minRotation, maxRotation);
+const lengthChangeInput = setupInput("length-change", changeLengthChange, defaultLengthChange, minLengthChange, maxLengthChange);
+const lineWidthInput = setupInput("line-width", changeLineWidth, defaultLineWidth, minLineWidth, maxLineWidth);
 
 
 /*Initialize canvas and draw the tree*/
