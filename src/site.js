@@ -80,42 +80,89 @@ function setupInput(id, handler, defaultValue, minValue = null, maxValue = null)
 }
 
 // Draw a branch and then draw two more
-function branch(x, y, a, l, count) {
-  ctx.beginPath();
-  ctx.moveTo(x,y);
+// Only do this if drawTree flag is true
+function branch(x, y, a, l, count, drawTree) {
   const destX = x - (Math.sin(a) * l);
   const destY = y - (Math.cos(a) * l);
-  ctx.lineTo(destX, destY);
-  ctx.stroke();
-  draw(destX, destY, a, l * (lengthChange / lengthChangeInputModifier), count + 1)
+  if (drawTree) {
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(destX, destY);
+    ctx.stroke();
+  }
+    //Check for new boundaries
+  if (destX < min_x || min_x == -1)
+    min_x = destX;
+  if (destX > max_x || max_x == -1)
+    max_x = destX;
+  if (destY < min_y || min_y == -1)
+    min_y = destY;
+  if (destY > max_y || max_y == -1)
+    max_y = destY;
+  draw(destX, destY, a, l * (lengthChange / lengthChangeInputModifier), count + 1, drawTree)
 }
 
 // Draw two branches mirrored along y axis
-function draw(x, y, addAngle, l, count) {
+// Pass given drawTree flag to prevent/enable drawing
+function draw(x, y, addAngle, l, count, drawTree) {
   if (count >= depth)
     return;
   //Additional rotation based on rate of change and how many iterations there have been
   const modifier = count * angleChange / 100;
   //Left
   var trueAngle = (addAngle + angle) + modifier;
-  branch(x, y, trueAngle, l, count);
+  branch(x, y, trueAngle, l, count, drawTree);
   //Right
   trueAngle = (addAngle - angle) - modifier;
-  branch(x, y, trueAngle, l, count);
+  branch(x, y, trueAngle, l, count, drawTree);
 }
 
 function update() {
+  // Reset boundary trackers
+  max_x = -1;
+  max_y = -1;
+  min_x = -1;
+  min_y = -1;
+
   // Reset canvas
   ctx.clearRect(0, 0, width, height);
   ctx.fillStyle=bgColour;
   ctx.fillRect(0, 0, width, height);
+
+  // No shape so don't need to do anything
+  if (depth == 0)
+    return
+
+  // Set pen style
   ctx.strokeStyle = fgColour;
   ctx.lineWidth = lineWidth;
 
-  // Draw first line and recursively draw the rest
-  if (depth > 0)
-    branch(width/2, start, rotation, length * lengthChange / lengthChangeInputModifier, 0)
+  //Go through all the lines without drawing to get the centre point
+  const drawTree = rotation == 0;
+  branch(xPos, yPos, 0, length * lengthChange / lengthChangeInputModifier, 0, drawTree)
+
+  // Calculate centre point from boundaries
+  const c_y = min_y + ((max_y - min_y) / 2);
+  const c_x = min_x + ((max_x - min_x) / 2);
+
+  if(drawTree)
+    return;
+
+  const a = toRadians(90) + rotation;
+  const l = yPos - c_y;
+  const adjacent = Math.cos(a) * l;
+  const opposite = Math.sin(a) * l;
+  const x = c_x - adjacent;
+  const y = c_y + opposite;
+
+  branch(x, y, rotation, length * lengthChange / lengthChangeInputModifier, 0, true);
 }
+
+/*Canvas dimensions*/
+
+const width = 3000;
+const height = width * 0.5;
+const lengthChangeInputModifier = 100;
 
 
 /*Value boundaries*/
@@ -133,7 +180,7 @@ const maxRotation = 360;
 const maxLengthChange = 100;
 const minLengthChange = 0;
 const minAngleChange = 0;
-const maxAngleChange = 630;
+const maxAngleChange = 629;
 
 
 /*Default values*/
@@ -146,16 +193,10 @@ const defaultRotation = minRotation;
 const defaultLengthChange = 67;
 const defaultAngleChange = minAngleChange;
 
-const defaultStart = 1300;
+const defaultX = width / 2;
+const defaultY = 1300;
 const defaultBgColour = "#5F9EA0";
 const defaultFgColour = "#c16081";
-
-
-/*Canvas dimensions*/
-
-const width = 3000;
-const height = width * 0.5;
-const lengthChangeInputModifier = 100;
 
 
 /*Global variables*/
@@ -163,13 +204,20 @@ const lengthChangeInputModifier = 100;
 var angle = toRadians(defaultAngle);
 var depth = defaultDepth;
 var length = defaultLength;
-var start = defaultStart;
 var bgColour = defaultBgColour;
 var fgColour = defaultFgColour;
-var lineWidth = defaultLineWidth;
 var rotation = toRadians(defaultRotation);
 var lengthChange = defaultLengthChange;
+var lineWidth = defaultLineWidth;
 var angleChange = defaultAngleChange;
+
+
+var max_x = -1;
+var max_y = -1;
+var min_x = -1;
+var min_y = -1;
+var xPos = defaultX;
+var yPos = defaultY;
 
 
 /*Get input elements and set default values*/

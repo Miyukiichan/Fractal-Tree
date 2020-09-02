@@ -7,7 +7,8 @@ Fractal tree demo in HTML5 and JS
 ## Must
 
 - Rotation
-  - About the center point instead of the origin
+  - Investigate why cenrte point seems offset
+  - Adjustments after rotation are still relative to the default starting position
 - Move tree by dragging
 - Make responsive
 
