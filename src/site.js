@@ -45,6 +45,56 @@ function changeAngleChange() {
   update();
 }
 
+// Set the dragging flag and take readings of the original position in case there is an error
+// e.g. the user leaves the canvas boundaries
+function startDrag(event) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = width / rect.width;
+  const scaleY = height / rect.height;
+  const mouse_x = (event.clientX - rect.left) * scaleX;
+  const mouse_y = (event.clientY - rect.top) * scaleY;
+  if (mouse_x > min_x && mouse_x < max_x && mouse_y > min_y && mouse_y < max_y) {
+    dragging = true;
+    dragX = mouse_x;
+    dragY = mouse_y;
+    xWhenDragged = xPos;
+    yWhenDragged = yPos;
+  }
+}
+
+// Subtract the difference in user mouse movement since previous measurement from the position
+// Thus moving the fractal
+function drag(event) {
+  if (!dragging)
+    return;
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = width / rect.width;
+  const scaleY = height / rect.height;
+  const mouse_x = (event.clientX - rect.left) * scaleX;
+  const mouse_y = (event.clientY - rect.top) * scaleY;
+  const dx = dragX - mouse_x;
+  const dy = dragY - mouse_y;
+  xPos -= dx;
+  yPos -= dy;
+  dragX = mouse_x;
+  dragY = mouse_y;
+  update();
+}
+
+function stopDrag() {
+  dragging = false;
+}
+
+// Reset the position to where the user started dragging
+function interruptDrag() {
+  if (!dragging)
+    return;
+  dragging = false;
+  xPos = xWhenDragged;
+  yPos = yWhenDragged;
+  update();
+}
+
 
 /*Functions*/
 
@@ -68,6 +118,8 @@ function toRadians(deg) {
   return deg * (Math.PI/180);
 }
 
+// Generic function to set the min/max/default values of a given input id
+// Returns an element object representing the input of the given id
 function setupInput(id, handler, defaultValue, minValue = null, maxValue = null) {
   const input = document.getElementById(id);
   input.addEventListener("input", handler);
@@ -77,6 +129,24 @@ function setupInput(id, handler, defaultValue, minValue = null, maxValue = null)
     input.max = maxValue;
   input.value = defaultValue;
   return input;
+}
+
+function checkBoundaries(x, y) {
+  if (x < min_x || min_x == -1)
+    min_x = x;
+  if (x > max_x || max_x == -1)
+    max_x = x;
+  if (y < min_y || min_y == -1)
+    min_y = y;
+  if (y > max_y || max_y == -1)
+    max_y = y;
+}
+
+function resetBoundaries() {
+  min_x = -1;
+  max_x = -1;
+  min_y = -1;
+  max_y = -1;
 }
 
 // Draw a branch and then draw two more
@@ -90,15 +160,10 @@ function branch(x, y, a, l, count, drawTree) {
     ctx.lineTo(destX, destY);
     ctx.stroke();
   }
-    //Check for new boundaries
-  if (destX < min_x || min_x == -1)
-    min_x = destX;
-  if (destX > max_x || max_x == -1)
-    max_x = destX;
-  if (destY < min_y || min_y == -1)
-    min_y = destY;
-  if (destY > max_y || max_y == -1)
-    max_y = destY;
+  //Checking destination covers all but the starting point so need to check the origin in that case
+  if (count == 0)
+    checkBoundaries(x, y);
+  checkBoundaries(destX, destY);
   draw(destX, destY, a, l * (lengthChange / lengthChangeInputModifier), count + 1, drawTree)
 }
 
@@ -118,12 +183,6 @@ function draw(x, y, addAngle, l, count, drawTree) {
 }
 
 function update() {
-  // Reset boundary trackers
-  max_x = -1;
-  max_y = -1;
-  min_x = -1;
-  min_y = -1;
-
   // Reset canvas
   ctx.clearRect(0, 0, width, height);
   ctx.fillStyle=bgColour;
@@ -138,23 +197,28 @@ function update() {
   ctx.lineWidth = lineWidth;
 
   //Go through all the lines without drawing to get the centre point
-  const drawTree = rotation == 0;
+  const drawTree = rotation == 0; //Only need to draw the tree if not rotating
+  resetBoundaries();
   branch(xPos, yPos, 0, length * lengthChange / lengthChangeInputModifier, 0, drawTree)
 
   // Calculate centre point from boundaries
   const c_y = min_y + ((max_y - min_y) / 2);
   const c_x = min_x + ((max_x - min_x) / 2);
 
-  if(drawTree)
+  if(drawTree) //Tree already drawn correctly
     return;
 
+  // Rotation based upon right angled triangle "A" adjacent to isosceles triangle "B"
+  // Where hypotenuse of A is one of the equal sides of B
+  // and the equal sides of B = center point - starting y position when not rotated
   const a = toRadians(90) + rotation;
   const l = yPos - c_y;
-  const adjacent = Math.cos(a) * l;
-  const opposite = Math.sin(a) * l;
-  const x = c_x - adjacent;
-  const y = c_y + opposite;
+  const dx = Math.cos(a) * l;
+  const dy = Math.sin(a) * l;
+  const x = c_x - dx;
+  const y = c_y + dy;
 
+  resetBoundaries();
   branch(x, y, rotation, length * lengthChange / lengthChangeInputModifier, 0, true);
 }
 
@@ -211,14 +275,23 @@ var lengthChange = defaultLengthChange;
 var lineWidth = defaultLineWidth;
 var angleChange = defaultAngleChange;
 
-
+// Boundary trackers
 var max_x = -1;
 var max_y = -1;
 var min_x = -1;
 var min_y = -1;
+
+// Position of the tree
 var xPos = defaultX;
 var yPos = defaultY;
 
+var dragging = false;
+//Point user clicks when dragging starts
+var dragX = 0;
+var dragY = 0;
+//Original position when dragging starts so that it can be reverted if needed
+var xWhenDragged = 0;
+var yWhenDragged = 0;
 
 /*Get input elements and set default values*/
 
@@ -232,10 +305,16 @@ const lengthChangeInput = setupInput("length-change", changeLengthChange, defaul
 const lineWidthInput = setupInput("line-width", changeLineWidth, defaultLineWidth, minLineWidth, maxLineWidth);
 const angleChangeInput = setupInput("angle-change", changeAngleChange, defaultAngleChange, minAngleChange, maxAngleChange);
 
+// Dragging events for the canvas
+const canvas = document.getElementById("canvas");
+canvas.addEventListener("mousedown", startDrag);
+canvas.addEventListener("mousemove", drag);
+canvas.addEventListener("mouseup", stopDrag);
+canvas.addEventListener("mouseout", interruptDrag);
+
 
 /*Initialize canvas and draw the tree*/
 
-const canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 canvas.height = height;
 canvas.width = width;
