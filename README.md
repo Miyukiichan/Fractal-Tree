@@ -6,16 +6,20 @@ Fractal tree demo in HTML5 and JS
 
 ## Must
 
-- Rotation
-  - Adjustments after rotation are still relative to the default starting position
-- Make responsive
+- Multiple trees
+  - Make object oriented
+  - Add new trees
+  - Duplicate trees
+  - Delete trees
 
 ## Should
 
-- Style number inputs
+- Rotation
+  - Adjustments after rotation are still relative to the default starting position
 - Make styles cross browser compatible
 
 # Could
 
-- Multiple trees
 - Animation
+- Style number inputs
+- Make responsive
