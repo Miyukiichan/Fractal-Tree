@@ -6,14 +6,16 @@ Fractal tree demo in HTML5 and JS
 
 ## Must
 
+- Refactor to use points instead of x and y variables
 - Multiple trees
-  - Make object oriented
+  - Change settings menu when different treee is selected
   - Add new trees
   - Duplicate trees
   - Delete trees
 
 ## Should
 
+- Draw dashed border around selected tree
 - Rotation
   - Adjustments after rotation are still relative to the default starting position
 - Make styles cross browser compatible
@@ -21,5 +23,10 @@ Fractal tree demo in HTML5 and JS
 # Could
 
 - Animation
+- Multiselect
 - Style number inputs
 - Make responsive
+
+# BUGS
+
+- When position point is outside the range (above the height limit) user cannot select it anymore
