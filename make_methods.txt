@@ -1,5 +1,0 @@
-checkBoundaries
-resetBoundaries
-update
-draw
-branch
