@@ -12,7 +12,7 @@ class Point {
 class Tree {
   //Set all values to their defaults
   constructor() {
-    this.position = new Point(defaultX, defaultY);
+    this.position = defaultPosition.copy();
     this.angle = toRadians(defaultAngle);
     this.depth = defaultDepth;
     this.length = defaultLength;
@@ -165,23 +165,18 @@ function changeAngleChange() {
 }
 
 function startDrag(event) {
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = width / rect.width;
-  const scaleY = height / rect.height;
-  const mouse_x = (event.clientX - rect.left) * scaleX;
-  const mouse_y = (event.clientY - rect.top) * scaleY;
-  const mouse_point = new Point(mouse_x, mouse_y);
+  const point = relativePoint(event);
   var foundTarget = false;
   trees.forEach(function(tree) {
-    if (mouse_x > tree.min_x && mouse_x < tree.max_x && mouse_y > tree.min_y && mouse_y < tree.max_y) {
-      if (pointDistance(tree.centerPoint(), mouse_point) <= pointDistance(current.centerPoint(), mouse_point)) {
+    if (point.x > tree.min_x && point.x < tree.max_x && point.y > tree.min_y && point.y < tree.max_y) {
+      if (pointDistance(tree.centerPoint(), point) <= pointDistance(current.centerPoint(), point)) {
         current = tree;
         foundTarget = true;
       }
     }
     if (foundTarget) {
       dragging = true;
-      dragPoint = mouse_point;
+      dragPoint = point;
       pointWhenDragged = current.position.copy();
     }
   });
@@ -192,20 +187,15 @@ function startDrag(event) {
 function drag(event) {
   if (!dragging)
     return;
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = width / rect.width;
-  const scaleY = height / rect.height;
-  const mouse_x = (event.clientX - rect.left) * scaleX;
-  const mouse_y = (event.clientY - rect.top) * scaleY;
-  const mouse_point = new Point(mouse_x, mouse_y);
-  const dx = dragPoint.x - mouse_x;
-  const dy = dragPoint.y - mouse_y;
+  const point = relativePoint(event);
+  const dx = dragPoint.x - point.x;
+  const dy = dragPoint.y - point.y;
   //Temporary bug fix for when position point goes outside the range (particularly if it exceeds the height)
   if (current.max_y - dy <= height && current.min_y - dy >= 0)
     current.position.y -= dy;
   if (current.max_x - dx <= width && current.min_x - dx >= 0)
     current.position.x -= dx;
-  dragPoint = mouse_point;
+  dragPoint = point;
   update();
 }
 
@@ -225,9 +215,19 @@ function interruptDrag() {
 
 /*Functions*/
 
+// Return the true relative point of a given canvas click event
+function relativePoint(event) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = width / rect.width;
+  const scaleY = height / rect.height;
+  const x = (event.clientX - rect.left) * scaleX;
+  const y =(event.clientY - rect.top) * scaleY;
+  return new Point(x,y);
+}
+
 // Return the "as the crow flies" distance between two points
 function pointDistance(a, b) {
-  return Math.sqrt((a.x - b.x) ** 2 + (a.y + b.y) ** 2);
+  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
 }
 
 // Limit the input of a number input using the min and max values
@@ -272,6 +272,8 @@ function update() {
     tree.update();
   });
 }
+
+
 /*Canvas dimensions*/
 
 const width = 3000;
@@ -307,8 +309,7 @@ const defaultRotation = minRotation;
 const defaultLengthChange = 67;
 const defaultAngleChange = minAngleChange;
 
-const defaultX = width / 2;
-const defaultY = 1300;
+const defaultPosition = new Point(width / 2, 1300);
 const defaultBgColour = "#5F9EA0";
 const defaultFgColour = "#c16081";
 
