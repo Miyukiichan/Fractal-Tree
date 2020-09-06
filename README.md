@@ -6,7 +6,7 @@ Fractal tree demo in HTML5 and JS
 
 ## Must
 
-- Refactor to use points instead of x and y variables
+- Add minimum drag space for when dimensions are too small
 - Multiple trees
   - Change settings menu when different treee is selected
   - Add new trees
@@ -18,6 +18,7 @@ Fractal tree demo in HTML5 and JS
 - Draw dashed border around selected tree
 - Rotation
   - Adjustments after rotation are still relative to the default starting position
+- Investigate why pointDistance works if using pythag wrong
 - Make styles cross browser compatible
 
 # Could

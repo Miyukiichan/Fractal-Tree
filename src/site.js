@@ -3,14 +3,16 @@ class Point {
     this.x = x;
     this.y = y;
   }
+  copy() {
+    return new Point(this.x, this.y);
+  }
 }
 /*Represents a fractal tree with all of its properties and drawing methods*/
 
 class Tree {
   //Set all values to their defaults
   constructor() {
-    this.xPos = defaultX;
-    this.yPos = defaultY;
+    this.position = new Point(defaultX, defaultY);
     this.angle = toRadians(defaultAngle);
     this.depth = defaultDepth;
     this.length = defaultLength;
@@ -24,15 +26,15 @@ class Tree {
   modifiedLength(length = this.length) {
     return length * this.lengthChange / lengthChangeInputModifier;
   }
-  checkBoundaries(x, y) {
-    if (x < this.min_x || this.min_x == -1)
-      this.min_x = x;
-    if (x > this.max_x || this.max_x == -1)
-      this.max_x = x;
-    if (y < this.min_y || this.min_y == -1)
-      this.min_y = y;
-    if (y > this.max_y || this.max_y == -1)
-      this.max_y = y;
+  checkBoundaries(point) {
+    if (point.x < this.min_x || this.min_x == -1)
+      this.min_x = point.x;
+    if (point.x > this.max_x || this.max_x == -1)
+      this.max_x = point.x;
+    if (point.y < this.min_y || this.min_y == -1)
+      this.min_y = point.y;
+    if (point.y > this.max_y || this.max_y == -1)
+      this.max_y = point.y;
   }
   resetBoundaries() {
     this.min_x = -1;
@@ -44,9 +46,6 @@ class Tree {
     const c_y = this.min_y + ((this.max_y - this.min_y) / 2);
     const c_x = this.min_x + ((this.max_x - this.min_x) / 2);
     return new Point(c_x, c_y);
-  }
-  position() {
-    return new Point(this.xPos, this.yPos);
   }
   update() {
     // No shape so don't need to do anything
@@ -60,7 +59,7 @@ class Tree {
     //Go through all the lines without drawing to get the centre point
     const drawTree = this.rotation == 0; //Only need to draw the tree if not rotating
     this.resetBoundaries();
-    this.branch(this.xPos, this.yPos, 0, this.modifiedLength(), 0, drawTree)
+    this.branch(this.position, 0, this.modifiedLength(), 0, drawTree)
 
     // Calculate centre point from boundaries
     const c_y = this.min_y + ((this.max_y - this.min_y) / 2);
@@ -73,45 +72,47 @@ class Tree {
     // Where hypotenuse of A is one of the equal sides of B
     // and the equal sides of B = center point - starting y position when not rotated
     const a = toRadians(90) + this.rotation;
-    const l = this.yPos - c_y;
+    const l = this.position.y - c_y;
     const dx = Math.cos(a) * l;
     const dy = Math.sin(a) * l;
     const x = c_x - dx;
     const y = c_y + dy;
+    const point = new Point(x,y);
 
     this.resetBoundaries();
-    this.branch(x, y, this.rotation, this.modifiedLength(), 0, true);
+    this.branch(point, this.rotation, this.modifiedLength(), 0, true);
   }
   // Draw a branch and then draw two more
   // Only do this if drawTree flag is true
-  branch(x, y, a, l, count, drawTree) {
-    const destX = x - (Math.sin(a) * l);
-    const destY = y - (Math.cos(a) * l);
+  branch(point, a, l, count, drawTree) {
+    const destX = point.x - (Math.sin(a) * l);
+    const destY = point.y - (Math.cos(a) * l);
     if (drawTree) {
       ctx.beginPath();
-      ctx.moveTo(x,y);
+      ctx.moveTo(point.x,point.y);
       ctx.lineTo(destX, destY);
       ctx.stroke();
     }
     //Checking destination covers all but the starting point so need to check the origin in that case
     if (count == 0)
-      this.checkBoundaries(x, y);
-    this.checkBoundaries(destX, destY);
-    this.draw(destX, destY, a, this.modifiedLength(l), count + 1, drawTree)
+      this.checkBoundaries(point);
+    const destPoint = new Point(destX, destY);
+    this.checkBoundaries(destPoint);
+    this.draw(destPoint, a, this.modifiedLength(l), count + 1, drawTree)
   }
   // Draw two branches mirrored along y axis
   // Pass given drawTree flag to prevent/enable drawing
-  draw(x, y, addAngle, l, count, drawTree) {
+  draw(point, addAngle, l, count, drawTree) {
     if (count >= this.depth)
       return;
     //Additional rotation based on rate of change and how many iterations there have been
     const modifier = count * this.angleChange / 100;
     //Left
     var trueAngle = (addAngle + this.angle) + modifier;
-    this.branch(x, y, trueAngle, l, count, drawTree);
+    this.branch(point, trueAngle, l, count, drawTree);
     //Right
     trueAngle = (addAngle - this.angle) - modifier;
-    this.branch(x, y, trueAngle, l, count, drawTree);
+    this.branch(point, trueAngle, l, count, drawTree);
   }
 }
 
@@ -180,10 +181,8 @@ function startDrag(event) {
     }
     if (foundTarget) {
       dragging = true;
-      dragX = mouse_x;
-      dragY = mouse_y;
-      xWhenDragged = current.xPos;
-      yWhenDragged = current.yPos;
+      dragPoint = mouse_point;
+      pointWhenDragged = current.position.copy();
     }
   });
 }
@@ -198,15 +197,15 @@ function drag(event) {
   const scaleY = height / rect.height;
   const mouse_x = (event.clientX - rect.left) * scaleX;
   const mouse_y = (event.clientY - rect.top) * scaleY;
-  const dx = dragX - mouse_x;
-  const dy = dragY - mouse_y;
+  const mouse_point = new Point(mouse_x, mouse_y);
+  const dx = dragPoint.x - mouse_x;
+  const dy = dragPoint.y - mouse_y;
   //Temporary bug fix for when position point goes outside the range (particularly if it exceeds the height)
   if (current.max_y - dy <= height && current.min_y - dy >= 0)
-    current.yPos -= dy;
+    current.position.y -= dy;
   if (current.max_x - dx <= width && current.min_x - dx >= 0)
-    current.xPos -= dx;
-  dragX = mouse_x;
-  dragY = mouse_y;
+    current.position.x -= dx;
+  dragPoint = mouse_point;
   update();
 }
 
@@ -219,14 +218,14 @@ function interruptDrag() {
   if (!dragging)
     return;
   dragging = false;
-  current.xPos = xWhenDragged;
-  current.yPos = yWhenDragged;
+  current.position = pointWhenDragged.copy();
   update();
 }
 
 
 /*Functions*/
 
+// Return the "as the crow flies" distance between two points
 function pointDistance(a, b) {
   return Math.sqrt((a.x - b.x) ** 2 + (a.y + b.y) ** 2);
 }
@@ -317,11 +316,9 @@ var bgColour = defaultBgColour;
 
 var dragging = false;
 //Point user clicks when dragging starts
-var dragX = 0;
-var dragY = 0;
+var dragPoint = new Point(0,0);
 //Original position when dragging starts so that it can be reverted if needed
-var xWhenDragged = 0;
-var yWhenDragged = 0;
+var pointWhenDragged = new Point(0,0);
 
 var current = new Tree();
 var trees = new Array();
