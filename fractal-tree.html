@@ -6,50 +6,58 @@
   <body>
     <header>Fractal Tree</header>
     <div id="parent">
-    <div id="settings">
-      <center>
-        <h1><u>Settings</u></h1>
-      </center>
-      <form id="controls">
-        <div class="input" id="angle-input">
-          <label for="angle">Angle (Degrees)</label>
-          <input class="range" id="angle" type="range"></input>
-        </div>
-        <div class="input" id="depth-input">
-          <label for="depth">Recursion Depth</label>
-          <input id="depth" type="number"></input>
-        </div>
-        <div class="input" id="length-input">
-          <label for="length">Size (px)</label>
-          <input class="range" id="length" type="range"></input>
-        </div>
-        <div class="input" id="bg-colour-input">
-          <label for="bg-colour">Background Colour</label>
-          <input class="colour" type="color" id="bg-colour">
-        </div>
-        <div class="input" id="fg-colour-input">
-          <label for="fg-colour">Foreground Colour</label>
-          <input class="colour" type="color" id="fg-colour">
-        </div>
-        <div class="input" id="rotation-input">
-          <label for="rotation">Rotation (Degrees)</label>
-          <input class="range" id="rotation" type="range"></input>
-        </div>
-        <div class="input" id="length-change-input">
-          <label for="length-change">Rate of length change</label>
-          <input class="range" id="length-change" type="range"></input>
-        </div>
-        <div class="input" id="line-width-input">
-          <label for="line-width">Line Width</label>
-          <input id="line-width" type="number"></input>
-        </div>
-        <div class="input" id="angle-change-input">
-          <label for="angle-change">Rate of angle change</label>
-          <input class="range" id="angle-change" type="range"></input>
-        </div>
-      </form>
-    </div>
-    <canvas id="canvas">No canvas support</canvas>
+      <div class="settings">
+        <center>
+          <h1><u>Settings</u></h1>
+        </center>
+        <form id="controls">
+          <div class="input" id="angle-input">
+            <label for="angle">Angle (Degrees)</label>
+            <input class="range" id="angle" type="range"></input>
+          </div>
+          <div class="input" id="depth-input">
+            <label for="depth">Recursion Depth</label>
+            <input id="depth" type="number"></input>
+          </div>
+          <div class="input" id="length-input">
+            <label for="length">Size (px)</label>
+            <input class="range" id="length" type="range"></input>
+          </div>
+          <div class="input" id="bg-colour-input">
+            <label for="bg-colour">Background Colour</label>
+            <input class="colour" type="color" id="bg-colour">
+          </div>
+          <div class="input" id="fg-colour-input">
+            <label for="fg-colour">Foreground Colour</label>
+            <input class="colour" type="color" id="fg-colour">
+          </div>
+          <div class="input" id="rotation-input">
+            <label for="rotation">Rotation (Degrees)</label>
+            <input class="range" id="rotation" type="range"></input>
+          </div>
+          <div class="input" id="length-change-input">
+            <label for="length-change">Rate of length change</label>
+            <input class="range" id="length-change" type="range"></input>
+          </div>
+          <div class="input" id="line-width-input">
+            <label for="line-width">Line Width</label>
+            <input id="line-width" type="number"></input>
+          </div>
+          <div class="input" id="angle-change-input">
+            <label for="angle-change">Rate of angle change</label>
+            <input class="range" id="angle-change" type="range"></input>
+          </div>
+        </form>
+      </div>
+      <canvas id="canvas">No canvas support</canvas>
+      <div class="settings">
+        <center>
+          <h1><u>Controls</u></h1>
+          <form id="controls">
+            <input type="button" id="new-tree" value="Add New Tree"></button>
+          </form>
+        </center>
+      </div>
     </div>
   </body>
   <script src="src/site.js"></script>

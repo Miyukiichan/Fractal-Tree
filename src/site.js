@@ -212,6 +212,12 @@ function interruptDrag() {
   update();
 }
 
+function newTree() {
+  trees.push(new Tree());
+  current = trees[trees.length - 1];
+  update();
+}
+
 
 /*Functions*/
 
@@ -277,7 +283,7 @@ function update() {
 /*Canvas dimensions*/
 
 const width = 3000;
-const height = width * 0.5;
+const height = width * 0.58;
 const lengthChangeInputModifier = 100;
 
 
@@ -286,8 +292,8 @@ const lengthChangeInputModifier = 100;
 const minAngle = 0;
 const maxAngle = 180;
 const minDepth = 0;
-const maxDepth = 13;
-const maxLength = 550;
+const maxDepth = 11;
+const maxLength = 700;
 const minLength = 20;
 const minLineWidth = 1;
 const maxLineWidth = 10;
@@ -302,14 +308,14 @@ const maxAngleChange = 629;
 /*Default values*/
 
 const defaultAngle = 20;
-const defaultDepth = 13;
+const defaultDepth = maxDepth;
 const defaultLength = maxLength;
 const defaultLineWidth = 2;
 const defaultRotation = minRotation;
 const defaultLengthChange = 67;
 const defaultAngleChange = minAngleChange;
 
-const defaultPosition = new Point(width / 2, 1300);
+const defaultPosition = new Point(width / 2, 1550);
 const defaultBgColour = "#5F9EA0";
 const defaultFgColour = "#c16081";
 
@@ -321,9 +327,8 @@ var dragPoint = new Point(0,0);
 //Original position when dragging starts so that it can be reverted if needed
 var pointWhenDragged = new Point(0,0);
 
-var current = new Tree();
+var current
 var trees = new Array();
-trees.push(current);
 
 
 /*Get input elements and set default values*/
@@ -337,6 +342,9 @@ const rotationInput = setupInput("rotation", changeRotation, defaultRotation, mi
 const lengthChangeInput = setupInput("length-change", changeLengthChange, defaultLengthChange, minLengthChange, maxLengthChange);
 const lineWidthInput = setupInput("line-width", changeLineWidth, defaultLineWidth, minLineWidth, maxLineWidth);
 const angleChangeInput = setupInput("angle-change", changeAngleChange, defaultAngleChange, minAngleChange, maxAngleChange);
+
+const newTreeButton = document.getElementById("new-tree");
+newTreeButton.addEventListener("click", newTree);
 
 // Dragging events for the canvas
 const canvas = document.getElementById("canvas");
@@ -353,4 +361,4 @@ canvas.height = height;
 canvas.width = width;
 ctx.heoght = height;
 ctx.width = width;
-update();
+newTree();

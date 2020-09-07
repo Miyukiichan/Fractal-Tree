@@ -15,8 +15,8 @@ input[type=number] {
   margin-bottom: 1rem;
 }
 
-#settings {
-  margin-right: 1.5rem;
+.settings {
+  margin-right: 1rem;
   margin-left: 1rem;
   border: solid black 1px;
   padding: 2rem;
@@ -53,7 +53,8 @@ canvas {
   border: solid black 1px;
   width: 85%;
   height: 100%;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
 }
 
 header {
