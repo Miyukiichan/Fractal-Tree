@@ -6,12 +6,12 @@ Fractal tree demo in HTML5 and JS
 
 ## Must
 
-- Add minimum drag space for when dimensions are too small
 - Multiple trees
   - Change settings menu when different treee is selected
   - Add new trees
   - Duplicate trees
   - Delete trees
+- Add minimum drag space for when dimensions are too small
 
 ## Should
 
@@ -19,6 +19,7 @@ Fractal tree demo in HTML5 and JS
 - Rotation
   - Adjustments after rotation are still relative to the default starting position
 - Make styles cross browser compatible
+- Split classes up into files and make them self conatined
 
 # Could
 
