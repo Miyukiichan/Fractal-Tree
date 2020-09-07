@@ -174,12 +174,12 @@ function startDrag(event) {
         foundTarget = true;
       }
     }
-    if (foundTarget) {
-      dragging = true;
-      dragPoint = point;
-      pointWhenDragged = current.position.copy();
-    }
   });
+  if (foundTarget) {
+    dragging = true;
+    dragPoint = point;
+    pointWhenDragged = current.position.copy();
+  }
 }
 
 // Subtract the difference in user mouse movement since previous measurement from the position
