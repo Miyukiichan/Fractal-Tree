@@ -232,16 +232,34 @@ function newTree() {
 }
 
 function copyTree() {
-    trees.push(current.copy());
-    current = lastElement(trees);
-    update();
+  if (trees.length == 0)
+    return;
+  trees.push(current.copy());
+  current = lastElement(trees);
+  update();
+}
+
+function deleteTree() {
+  removeFromArray(trees, current)
+  delete current;
+  current = lastElement(trees);
+  update();
 }
 
 
 /*Functions*/
 
+function removeFromArray(array, element) {
+  const index = array.indexOf(element);
+  if (index < 0)
+    return false;
+  array.splice(index, 1);
+  return true;
+}
+
 function lastElement(array) {
-  return array[array.length - 1];
+  if (array.length > 0)
+    return array[array.length - 1];
 }
 
 // Return the true relative point of a given canvas click event
@@ -377,6 +395,7 @@ const angleChangeInput = setupInput("angle-change", changeAngleChange, defaultAn
 
 const newTreeButton = setupButton("new-tree", newTree);
 const copyTreeButton = setupButton("copy-tree", copyTree);
+const deleteTreeButton = setupButton("delete-tree", deleteTree);
 
 // Dragging events for the canvas
 const canvas = document.getElementById("canvas");

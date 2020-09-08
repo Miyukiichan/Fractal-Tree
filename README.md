@@ -8,8 +8,6 @@ Fractal tree demo in HTML5 and JS
 
 - Multiple trees
   - Change settings menu when different tree is selected
-  - Duplicate trees
-  - Delete trees
 - Style controls pane buttons
 - Add minimum drag space for when dimensions are too small
 
