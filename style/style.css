@@ -56,11 +56,17 @@ input[type=button] {
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;
   font-size: 14pt;
-  font-family: "Poiret One", cursive;
   cursor: pointer;
+  background: #92c3d3;
+  color: black;
+  border-radius: 8px;
+  transition: all 0.1s ease;
+}
+input[type=button]:hover {
+  background: lightblue;
 }
 
-body {
+* {
   font-family: "Poiret One", cursive;
 }
 

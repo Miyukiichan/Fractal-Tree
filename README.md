@@ -6,7 +6,6 @@ Fractal tree demo in HTML5 and JS
 
 ## Must
 
-- Style controls pane buttons
 - Add minimum drag space for when dimensions are too small
 
 ## Should
