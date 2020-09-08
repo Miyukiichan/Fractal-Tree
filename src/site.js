@@ -1,8 +1,11 @@
+/*jshint esversion: 7*/
+
 class Point {
   constructor(x, y) {
     this.x = x;
     this.y = y;
   }
+
   copy() {
     return new Point(this.x, this.y);
   }
@@ -23,6 +26,7 @@ class Tree {
     this.angleChange = defaultAngleChange;
     this.resetBoundaries();
   }
+
   copy() {
     var tree = new Tree();
     tree.position = defaultPosition.copy();
@@ -36,9 +40,11 @@ class Tree {
     tree.angleChange = this.angleChange;
     return tree;
   }
+
   modifiedLength(length = this.length) {
     return length * this.lengthChange / lengthChangeInputModifier;
   }
+
   checkBoundaries(point) {
     if (point.x < this.min_x || this.min_x == -1)
       this.min_x = point.x;
@@ -49,21 +55,24 @@ class Tree {
     if (point.y > this.max_y || this.max_y == -1)
       this.max_y = point.y;
   }
+
   resetBoundaries() {
     this.min_x = -1;
     this.max_x = -1;
     this.min_y = -1;
     this.max_y = -1;
   }
+
   centerPoint() {
-    const c_y = this.min_y + ((this.max_y - this.min_y) / 2);
-    const c_x = this.min_x + ((this.max_x - this.min_x) / 2);
-    return new Point(c_x, c_y);
+    const cY = this.min_y + ((this.max_y - this.min_y) / 2);
+    const cX = this.min_x + ((this.max_x - this.min_x) / 2);
+    return new Point(cX, cY);
   }
+
   update() {
     // No shape so don't need to do anything
     if (this.depth == 0)
-      return
+      return;
 
     // Set pen style
     ctx.strokeStyle = this.fgColour;
@@ -72,29 +81,30 @@ class Tree {
     //Go through all the lines without drawing to get the centre point
     const drawTree = this.rotation == 0; //Only need to draw the tree if not rotating
     this.resetBoundaries();
-    this.branch(this.position, 0, this.modifiedLength(), 0, drawTree)
+    this.branch(this.position, 0, this.modifiedLength(), 0, drawTree);
 
     // Calculate centre point from boundaries
-    const c_y = this.min_y + ((this.max_y - this.min_y) / 2);
-    const c_x = this.min_x + ((this.max_x - this.min_x) / 2);
+    const cY = this.min_y + ((this.max_y - this.min_y) / 2);
+    const cX = this.min_x + ((this.max_x - this.min_x) / 2);
 
-    if(drawTree) //Tree already drawn correctly
+    if (drawTree) //Tree already drawn correctly
       return;
 
     // Rotation based upon right angled triangle "A" adjacent to isosceles triangle "B"
     // Where hypotenuse of A is one of the equal sides of B
     // and the equal sides of B = center point - starting y position when not rotated
     const a = toRadians(90) + this.rotation;
-    const l = this.position.y - c_y;
+    const l = this.position.y - cY;
     const dx = Math.cos(a) * l;
     const dy = Math.sin(a) * l;
-    const x = c_x - dx;
-    const y = c_y + dy;
-    const point = new Point(x,y);
+    const x = cX - dx;
+    const y = cY + dy;
+    const point = new Point(x, y);
 
     this.resetBoundaries();
     this.branch(point, this.rotation, this.modifiedLength(), 0, true);
   }
+
   // Draw a branch and then draw two more
   // Only do this if drawTree flag is true
   branch(point, a, l, count, drawTree) {
@@ -102,33 +112,38 @@ class Tree {
     const destY = point.y - (Math.cos(a) * l);
     if (drawTree) {
       ctx.beginPath();
-      ctx.moveTo(point.x,point.y);
+      ctx.moveTo(point.x, point.y);
       ctx.lineTo(destX, destY);
       ctx.stroke();
     }
-    //Checking destination covers all but the starting point so need to check the origin in that case
+
+    //Checking destination covers all but the starting point
+    //so need to check the origin in that case
     if (count == 0)
       this.checkBoundaries(point);
     const destPoint = new Point(destX, destY);
     this.checkBoundaries(destPoint);
-    this.draw(destPoint, a, this.modifiedLength(l), count + 1, drawTree)
+    this.draw(destPoint, a, this.modifiedLength(l), count + 1, drawTree);
   }
+
   // Draw two branches mirrored along y axis
   // Pass given drawTree flag to prevent/enable drawing
   draw(point, addAngle, l, count, drawTree) {
     if (count >= this.depth)
       return;
+
     //Additional rotation based on rate of change and how many iterations there have been
     const modifier = count * this.angleChange / 100;
+
     //Left
     var trueAngle = (addAngle + this.angle) + modifier;
     this.branch(point, trueAngle, l, count, drawTree);
+
     //Right
     trueAngle = (addAngle - this.angle) - modifier;
     this.branch(point, trueAngle, l, count, drawTree);
   }
 }
-
 
 /*Event handlers*/
 
@@ -148,17 +163,17 @@ function changeLength() {
 }
 
 function changeBg() {
-  bgColour = bgColourInput.value
+  bgColour = bgColourInput.value;
   update();
 }
 
 function changeFg() {
-  current.fgColour = fgColourInput.value
+  current.fgColour = fgColourInput.value;
   update();
 }
 
 function changeRotation() {
-  current.rotation = toRadians(Number(rotationInput.value)) * -1 //Make rotation go clockwise
+  current.rotation = toRadians(Number(rotationInput.value)) * -1; //Make rotation go clockwise
   update();
 }
 
@@ -181,14 +196,16 @@ function startDrag(event) {
   const point = relativePoint(event);
   var foundTarget = false;
   var foundTree = current;
-  trees.forEach(function(tree) {
-    if (point.x > tree.min_x && point.x < tree.max_x && point.y > tree.min_y && point.y < tree.max_y) {
+  trees.forEach(function (tree) {
+    if (point.x > tree.min_x && point.x < tree.max_x && point.y > tree.min_y &&
+      point.y < tree.max_y) {
       if (pointDistance(tree.centerPoint(), point) <= pointDistance(current.centerPoint(), point)) {
         foundTree = tree;
         foundTarget = true;
       }
     }
-  });
+  }
+);
   setCurrent(foundTree);
   if (foundTarget) {
     dragging = true;
@@ -205,7 +222,9 @@ function drag(event) {
   const point = relativePoint(event);
   const dx = dragPoint.x - point.x;
   const dy = dragPoint.y - point.y;
-  //Temporary bug fix for when position point goes outside the range (particularly if it exceeds the height)
+
+  //Temporary bug fix for when position point goes outside the range
+  //(particularly if it exceeds the height)
   if (current.max_y - dy <= height && current.min_y - dy >= 0)
     current.position.y -= dy;
   if (current.max_x - dx <= width && current.min_x - dx >= 0)
@@ -242,12 +261,10 @@ function copyTree() {
 }
 
 function deleteTree() {
-  removeFromArray(trees, current)
-  delete current;
+  removeFromArray(trees, current);
   setCurrent(lastElement(trees));
   update();
 }
-
 
 /*Functions*/
 
@@ -286,8 +303,8 @@ function relativePoint(event) {
   const scaleX = width / rect.width;
   const scaleY = height / rect.height;
   const x = (event.clientX - rect.left) * scaleX;
-  const y =(event.clientY - rect.top) * scaleY;
-  return new Point(x,y);
+  const y = (event.clientY - rect.top) * scaleY;
+  return new Point(x, y);
 }
 
 // Return the "as the crow flies" distance between two points
@@ -300,7 +317,7 @@ function pointDistance(a, b) {
 function setNumberInput(input, min, max) {
   var value = Number(input.value);
   if (value > max)
-    value = max
+    value = max;
   else if (value < min)
     value = min;
   input.value = value;
@@ -308,18 +325,18 @@ function setNumberInput(input, min, max) {
 }
 
 function toDegrees(rad) {
-  return rad * (180/Math.PI);
+  return rad * (180 / Math.PI);
 }
 
 function toRadians(deg) {
-  return deg * (Math.PI/180);
+  return deg * (Math.PI / 180);
 }
 
 // Generic function to set the min/max/default values of a given input id
 // Returns an element object representing the input of the given id
 function setupInput(id, handler, defaultValue, minValue = null, maxValue = null) {
   const input = document.getElementById(id);
-  input.addEventListener("input", handler);
+  input.addEventListener('input', handler);
   if (minValue != null)
     input.min = minValue;
   if (maxValue != null)
@@ -329,28 +346,26 @@ function setupInput(id, handler, defaultValue, minValue = null, maxValue = null)
 }
 
 function setupButton(id, handler) {
-  const button = document.getElementById(id)
-  button.addEventListener("click", handler);
+  const button = document.getElementById(id);
+  button.addEventListener('click', handler);
   return button;
 }
 
 function update() {
   // Reset canvas
   ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle=bgColour;
+  ctx.fillStyle = bgColour;
   ctx.fillRect(0, 0, width, height);
-  trees.forEach(function(tree) {
+  trees.forEach(function (tree) {
     tree.update();
   });
 }
-
 
 /*Canvas dimensions*/
 
 const width = 3000;
 const height = width * 0.58;
 const lengthChangeInputModifier = 100;
-
 
 /*Value boundaries*/
 
@@ -369,7 +384,6 @@ const minLengthChange = 0;
 const minAngleChange = 0;
 const maxAngleChange = 629;
 
-
 /*Default values*/
 
 const defaultAngle = 20;
@@ -381,51 +395,59 @@ const defaultLengthChange = 67;
 const defaultAngleChange = minAngleChange;
 
 const defaultPosition = new Point(width / 2, 1550);
-const defaultBgColour = "#5F9EA0";
-const defaultFgColour = "#c16081";
+const defaultBgColour = '#5F9EA0';
+const defaultFgColour = '#c16081';
 
 var bgColour = defaultBgColour;
 
 var dragging = false;
+
 //Point user clicks when dragging starts
-var dragPoint = new Point(0,0);
+var dragPoint = new Point(0, 0);
+
 //Original position when dragging starts so that it can be reverted if needed
-var pointWhenDragged = new Point(0,0);
+var pointWhenDragged = new Point(0, 0);
 
-var current
-var trees = new Array();
-
+var current;
+var trees = [];
 
 /*Get input elements and set default values*/
 
-const angleInput = setupInput("angle", changeAngle, defaultAngle, minAngle, maxAngle);
-const depthInput = setupInput("depth", changeDepth, defaultDepth, minDepth, maxDepth)
-const lengthInput = setupInput("length", changeLength, defaultLength, minLength, maxLength);
-const bgColourInput = setupInput("bg-colour", changeBg, defaultBgColour);
-const fgColourInput = setupInput("fg-colour", changeFg, defaultFgColour);
-const rotationInput = setupInput("rotation", changeRotation, defaultRotation, minRotation, maxRotation);
-const lengthChangeInput = setupInput("length-change", changeLengthChange, defaultLengthChange, minLengthChange, maxLengthChange);
-const lineWidthInput = setupInput("line-width", changeLineWidth, defaultLineWidth, minLineWidth, maxLineWidth);
-const angleChangeInput = setupInput("angle-change", changeAngleChange, defaultAngleChange, minAngleChange, maxAngleChange);
-
+const angleInput = setupInput(
+  'angle', changeAngle, defaultAngle, minAngle, maxAngle);
+const depthInput = setupInput(
+  'depth', changeDepth, defaultDepth, minDepth, maxDepth);
+const lengthInput = setupInput(
+  'length', changeLength, defaultLength, minLength, maxLength);
+const bgColourInput = setupInput(
+  'bg-colour', changeBg, defaultBgColour);
+const fgColourInput = setupInput(
+  'fg-colour', changeFg, defaultFgColour);
+const rotationInput = setupInput(
+  'rotation', changeRotation, defaultRotation, minRotation, maxRotation);
+const lengthChangeInput = setupInput(
+  'length-change', changeLengthChange, defaultLengthChange, minLengthChange, maxLengthChange);
+const lineWidthInput = setupInput(
+  'line-width', changeLineWidth, defaultLineWidth, minLineWidth, maxLineWidth);
+const angleChangeInput = setupInput(
+  'angle-change', changeAngleChange, defaultAngleChange, minAngleChange, maxAngleChange);
 
 /*Setup control buttons*/
 
-const newTreeButton = setupButton("new-tree", newTree);
-const copyTreeButton = setupButton("copy-tree", copyTree);
-const deleteTreeButton = setupButton("delete-tree", deleteTree);
+const newTreeButton = setupButton('new-tree', newTree);
+const copyTreeButton = setupButton('copy-tree', copyTree);
+const deleteTreeButton = setupButton('delete-tree', deleteTree);
 
 // Dragging events for the canvas
-const canvas = document.getElementById("canvas");
-canvas.addEventListener("mousedown", startDrag);
-canvas.addEventListener("mousemove", drag);
-canvas.addEventListener("mouseup", stopDrag);
-canvas.addEventListener("mouseout", interruptDrag);
-
+const canvas = document.getElementById('canvas');
+canvas.addEventListener('mousedown', startDrag);
+canvas.addEventListener('mousemove', drag);
+canvas.addEventListener('mouseup', stopDrag);
+canvas.addEventListener('mouseout', interruptDrag);
 
 /*Initialize canvas and draw the tree*/
 
-var ctx = canvas.getContext("2d");
+var ctx = canvas.getContext('2d');
 canvas.height = height;
 canvas.width = width;
 ctx.heoght = height;
