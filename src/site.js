@@ -23,6 +23,19 @@ class Tree {
     this.angleChange = defaultAngleChange;
     this.resetBoundaries();
   }
+  copy() {
+    var tree = new Tree();
+    tree.position = defaultPosition.copy();
+    tree.angle = this.angle;
+    tree.depth = this.depth;
+    tree.length = this.length;
+    tree.fgColour = this.fgColour;
+    tree.rotation = this.rotation;
+    tree.lengthChange = this.lengthChange;
+    tree.lineWidth = this.lineWidth;
+    tree.angleChange = this.angleChange;
+    return tree;
+  }
   modifiedLength(length = this.length) {
     return length * this.lengthChange / lengthChangeInputModifier;
   }
@@ -214,12 +227,22 @@ function interruptDrag() {
 
 function newTree() {
   trees.push(new Tree());
-  current = trees[trees.length - 1];
+  current = lastElement(trees);
   update();
+}
+
+function copyTree() {
+    trees.push(current.copy());
+    current = lastElement(trees);
+    update();
 }
 
 
 /*Functions*/
+
+function lastElement(array) {
+  return array[array.length - 1];
+}
 
 // Return the true relative point of a given canvas click event
 function relativePoint(event) {
@@ -267,6 +290,12 @@ function setupInput(id, handler, defaultValue, minValue = null, maxValue = null)
     input.max = maxValue;
   input.value = defaultValue;
   return input;
+}
+
+function setupButton(id, handler) {
+  const button = document.getElementById(id)
+  button.addEventListener("click", handler);
+  return button;
 }
 
 function update() {
@@ -343,8 +372,11 @@ const lengthChangeInput = setupInput("length-change", changeLengthChange, defaul
 const lineWidthInput = setupInput("line-width", changeLineWidth, defaultLineWidth, minLineWidth, maxLineWidth);
 const angleChangeInput = setupInput("angle-change", changeAngleChange, defaultAngleChange, minAngleChange, maxAngleChange);
 
-const newTreeButton = document.getElementById("new-tree");
-newTreeButton.addEventListener("click", newTree);
+
+/*Setup control buttons*/
+
+const newTreeButton = setupButton("new-tree", newTree);
+const copyTreeButton = setupButton("copy-tree", copyTree);
 
 // Dragging events for the canvas
 const canvas = document.getElementById("canvas");
