@@ -1,6 +1,7 @@
 @import "colours";
 @import "settings";
 @import "colour_picker";
+@import "button";
 @import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
 
 body {
@@ -9,8 +10,8 @@ body {
 
 canvas {
   border: solid black 1px;
-  width: 85%;
-  height: 100%;
+  width: 70%;
+  height: 99.7%;
   margin-right: 0.5rem;;
   margin-left: 0.5rem;;
 }
@@ -25,4 +26,5 @@ header {
 #parent {
   display: flex;
   margin-top: 1rem;
+  height: 89%;
 }
