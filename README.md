@@ -6,13 +6,13 @@ Fractal tree demo in HTML5 and JS
 
 ## Must
 
-- Multiple trees
-  - Change settings menu when different tree is selected
 - Style controls pane buttons
 - Add minimum drag space for when dimensions are too small
 
 ## Should
 
+- Multiple trees
+  - Improve closest tree finding algorithm to be more accurate
 - Draw dashed border around selected tree
 - Rotation
   - Adjustments after rotation are still relative to the default starting position

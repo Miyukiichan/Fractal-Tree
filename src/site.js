@@ -180,14 +180,16 @@ function changeAngleChange() {
 function startDrag(event) {
   const point = relativePoint(event);
   var foundTarget = false;
+  var foundTree = current;
   trees.forEach(function(tree) {
     if (point.x > tree.min_x && point.x < tree.max_x && point.y > tree.min_y && point.y < tree.max_y) {
       if (pointDistance(tree.centerPoint(), point) <= pointDistance(current.centerPoint(), point)) {
-        current = tree;
+        foundTree = tree;
         foundTarget = true;
       }
     }
   });
+  setCurrent(foundTree);
   if (foundTarget) {
     dragging = true;
     dragPoint = point;
@@ -227,7 +229,7 @@ function interruptDrag() {
 
 function newTree() {
   trees.push(new Tree());
-  current = lastElement(trees);
+  setCurrent(lastElement(trees));
   update();
 }
 
@@ -235,19 +237,35 @@ function copyTree() {
   if (trees.length == 0)
     return;
   trees.push(current.copy());
-  current = lastElement(trees);
+  setCurrent(lastElement(trees));
   update();
 }
 
 function deleteTree() {
   removeFromArray(trees, current)
   delete current;
-  current = lastElement(trees);
+  setCurrent(lastElement(trees));
   update();
 }
 
 
 /*Functions*/
+
+function setCurrent(tree) {
+  if (current === tree)
+    return;
+  current = tree;
+  if (tree == null)
+    return;
+  angleInput.value = toDegrees(current.angle);
+  depthInput.value = current.depth;
+  lengthInput.value = current.length;
+  fgColourInput.value = current.fgColour;
+  rotationInput.value = current.rotation;
+  lengthChangeInput.value = current.lengthChange;
+  lineWidthInput.value = current.lineWidth;
+  angleChangeInput.value = current.angleChange;
+}
 
 function removeFromArray(array, element) {
   const index = array.indexOf(element);
