@@ -83,6 +83,17 @@ class Tree {
     this.resetBoundaries();
     this.branch(this.position, 0, this.modifiedLength(), 0, drawTree);
 
+    const minDistance = 200;
+    if (relativeX(this.max_x) - relativeX(this.min_x) < minDistance) {
+      this.max_x += minDistance / 2;
+      this.min_x -= minDistance / 2;
+    }
+
+    if (relativeY(this.max_y) - relativeY(this.min_y) < minDistance) {
+      this.max_y += minDistance / 2;
+      this.min_y -= minDistance / 2;
+    }
+
     // Calculate centre point from boundaries
     const cY = this.min_y + ((this.max_y - this.min_y) / 2);
     const cX = this.min_x + ((this.max_x - this.min_x) / 2);
@@ -297,13 +308,22 @@ function lastElement(array) {
     return array[array.length - 1];
 }
 
+function relativeX(x) {
+  const rect = canvas.getBoundingClientRect();
+  const scale = width / rect.width;
+  return (x - rect.left) * scale;
+}
+
+function relativeY(y) {
+  const rect = canvas.getBoundingClientRect();
+  const scale = height / rect.height;
+  return (y - rect.top) * scale;
+}
+
 // Return the true relative point of a given canvas click event
 function relativePoint(event) {
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = width / rect.width;
-  const scaleY = height / rect.height;
-  const x = (event.clientX - rect.left) * scaleX;
-  const y = (event.clientY - rect.top) * scaleY;
+  const x = relativeX(event.clientX);
+  const y = relativeY(event.clientY);
   return new Point(x, y);
 }
 

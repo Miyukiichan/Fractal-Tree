@@ -6,13 +6,12 @@ Fractal tree demo in HTML5 and JS
 
 ## Must
 
-- Add minimum drag space for when dimensions are too small
+- Draw dashed border around selected tree and possibly make other trees less bold
+  - Need to have a way to clear the selection so it looks normal
+- Style number inputs
 
 ## Should
 
-- Multiple trees
-  - Improve closest tree finding algorithm to be more accurate
-- Draw dashed border around selected tree
 - Rotation
   - Adjustments after rotation are still relative to the default starting position
 - Make styles cross browser compatible
@@ -22,7 +21,6 @@ Fractal tree demo in HTML5 and JS
 
 - Animation
 - Multiselect
-- Style number inputs
 - Make responsive
 
 # BUGS
