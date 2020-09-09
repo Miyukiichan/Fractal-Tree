@@ -99,12 +99,12 @@ class Tree {
     this.branch(this.position, 0, this.modifiedLength(), 0, drawTree);
 
     const minDistance = 200;
-    if (relativeX(this.max_x) - relativeX(this.min_x) < minDistance) {
+    if (this.max_x - this.min_x < minDistance) {
       this.max_x += minDistance / 2;
       this.min_x -= minDistance / 2;
     }
 
-    if (relativeY(this.max_y) - relativeY(this.min_y) < minDistance) {
+    if (this.max_y - this.min_y < minDistance) {
       this.max_y += minDistance / 2;
       this.min_y -= minDistance / 2;
     }
@@ -219,7 +219,7 @@ function changeAngleChange() {
 }
 
 function startDrag(event) {
-  const point = relativePoint(event);
+  const point = relativePointEvent(event);
   var foundTarget = false;
   var foundTree = current;
   trees.forEach(function (tree) {
@@ -249,7 +249,7 @@ function startDrag(event) {
 function drag(event) {
   if (!dragging)
     return;
-  const point = relativePoint(event);
+  const point = relativePointEvent(event);
   const dx = dragPoint.x - point.x;
   const dy = dragPoint.y - point.y;
 
@@ -347,9 +347,13 @@ function relativeY(y) {
 }
 
 // Return the true relative point of a given canvas click event
-function relativePoint(event) {
-  const x = relativeX(event.clientX);
-  const y = relativeY(event.clientY);
+function relativePointEvent(event) {
+  return relativePoint(new Point(event.clientX, event.clientY));
+}
+
+function relativePoint(point) {
+  const x = relativeX(point.x);
+  const y = relativeY(point.y);
   return new Point(x, y);
 }
 
