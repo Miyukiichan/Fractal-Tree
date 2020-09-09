@@ -41,6 +41,20 @@ class Tree {
     return tree;
   }
 
+  drawRectangle() {
+    const bl = new Point(this.min_x, this.max_y);
+    const br = new Point(this.max_x, this.max_y);
+    const tl = new Point(this.min_x, this.min_y);
+    const tr = new Point(this.max_x, this.min_y);
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([30, 15]);
+    drawLine(bl, br);
+    drawLine(bl, tl);
+    drawLine(tl, tr);
+    drawLine(tr, br);
+  }
+
   modifiedLength(length = this.length) {
     return length * this.lengthChange / lengthChangeInputModifier;
   }
@@ -77,6 +91,7 @@ class Tree {
     // Set pen style
     ctx.strokeStyle = this.fgColour;
     ctx.lineWidth = this.lineWidth;
+    ctx.setLineDash([0, 0]);
 
     //Go through all the lines without drawing to get the centre point
     const drawTree = this.rotation == 0; //Only need to draw the tree if not rotating
@@ -215,14 +230,18 @@ function startDrag(event) {
         foundTarget = true;
       }
     }
-  }
-);
+  });
+
   setCurrent(foundTree);
+  drawSelectionHint = false;
   if (foundTarget) {
+    drawSelectionHint = true;
     dragging = true;
     dragPoint = point;
     pointWhenDragged = current.position.copy();
   }
+
+  update();
 }
 
 // Subtract the difference in user mouse movement since previous measurement from the position
@@ -278,6 +297,13 @@ function deleteTree() {
 }
 
 /*Functions*/
+
+function drawLine(a, b) {
+  ctx.beginPath();
+  ctx.moveTo(a.x, a.y);
+  ctx.lineTo(b.x, b.y);
+  ctx.stroke();
+}
 
 function setCurrent(tree) {
   if (current === tree)
@@ -379,6 +405,9 @@ function update() {
   trees.forEach(function (tree) {
     tree.update();
   });
+
+  if (current != null && drawSelectionHint)
+    current.drawRectangle();
 }
 
 /*Canvas dimensions*/
@@ -430,6 +459,7 @@ var pointWhenDragged = new Point(0, 0);
 
 var current;
 var trees = [];
+var drawSelectionHint = true;
 
 /*Get input elements and set default values*/
 

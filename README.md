@@ -6,8 +6,6 @@ Fractal tree demo in HTML5 and JS
 
 ## Must
 
-- Draw dashed border around selected tree and possibly make other trees less bold
-  - Need to have a way to clear the selection so it looks normal
 - Style number inputs
 
 ## Should
