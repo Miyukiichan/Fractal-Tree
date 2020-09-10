@@ -463,7 +463,7 @@ var pointWhenDragged = new Point(0, 0);
 
 var current;
 var trees = [];
-var drawSelectionHint = true;
+var drawSelectionHint = false;
 
 /*Get input elements and set default values*/
 
