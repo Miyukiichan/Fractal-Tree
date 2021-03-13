@@ -1,6 +1,6 @@
 # Fractal-Tree
 
-<img src="C:\Users\Sam\Desktop\Repos\Fractal-Tree\img\ui.png"  />
+![ui](img/ui.png)
 
 ## Overview
 
@@ -29,4 +29,4 @@ Here is a list of the various options present in the left-hand options area and 
 
 ## Examples
 
-![](C:\Users\Sam\Desktop\Repos\Fractal-Tree\img\01.png)
+![01](img/01.png)
