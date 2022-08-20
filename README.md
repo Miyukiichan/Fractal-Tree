@@ -10,7 +10,7 @@ Fractal tree art editor in HTML5 and JS. The goal of this project was initially 
 
 Here is a list of the various options present in the left-hand options area and what they translate to.
 
-- Angle - The angle between the two offshoots of each branch. This value remains constant assuming that the Rate of Angle change is set to 0 (default)
+- Angle - The angle between the two offshoots of each branch. This value remains constant assuming that the Rate of Angle change is set to 1 (default)
 - Recursion Depth - The amount of times more branches will be recursively created before it stops. Currently, this is maxed at 11
 - Size - The overall size of the tree
 - Background Colour - Global canvas background colour
